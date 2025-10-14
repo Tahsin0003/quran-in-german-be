@@ -104,7 +104,12 @@ class ContactController extends Controller
     {
         $contact = Contact::findOrFail($id);
         $contact->delete();
-        return response()->json(['message' => 'Contact deleted'], 200);
+        // Success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Contact deleted.',
+        ], 200);
+        // return response()->json(['message' => 'Contact deleted'], 200);
     }
 
     public function getContacts(Request $request)

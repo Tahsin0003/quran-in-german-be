@@ -30,12 +30,11 @@ This project serves as the backend API for the Quran In German
 Follow these steps to set up the project locally.
 
 ### 1️⃣ Clone the Repository
-```bash
+
 git clone https://github.com/Tahsin0003/quran-in-german-be.git
 cd your-project
 
 ---
-
 ## 📁 Folder Structure Overview
 
 app/
@@ -51,7 +50,6 @@ routes/
 ├── web.php # Web routes
 
 ---
-
 ## 📦 Useful Commands
 | Command                  | Description            |
 | ------------------------ | ---------------------- |
@@ -60,3 +58,5 @@ routes/
 | `php artisan queue:work` | Process queued jobs    |
 | `php artisan tinker`     | Open interactive shell |
 | `php artisan route:list` | List all routes        |
+
+```bash

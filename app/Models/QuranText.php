@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class QuranText extends Model
 {
     protected $table = 'quran_text';
+    protected $primaryKey = 'index';
+    public $timestamps = false;
 
     public function sura()
     {

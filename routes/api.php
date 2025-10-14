@@ -40,6 +40,9 @@ Route::middleware(['jwt.verify'])->group(function () {
     // Sura resource route
     // Route::apiResource('suras', \App\Http\Controllers\Api\SuraController::class);
     Route::apiResource('suras', \App\Http\Controllers\Api\SuraController::class)->only(['index', 'show', 'update']);
+    // Verse resource route
+    Route::apiResource('verses', \App\Http\Controllers\Api\VerseController::class)->only(['index', 'show', 'update']);
+
     Route::get('my-profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
     Route::put('users/update-profile', [\App\Http\Controllers\Api\UserController::class, 'updateProfile']);
     Route::get('get-users', [\App\Http\Controllers\Api\UserController::class, 'getUsers']);
