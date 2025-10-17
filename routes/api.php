@@ -28,6 +28,10 @@ Route::middleware(['jwt.verify'])->group(function () {
     Route::get('sura-list', [\App\Http\Controllers\Api\SuraController::class, 'suraList']);
     Route::get('surah/{id}/show', [\App\Http\Controllers\Api\SuraController::class, 'getSuraById']);
 
+    Route::get('my-profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
+    Route::put('users/update-profile', [\App\Http\Controllers\Api\UserController::class, 'updateProfile']);
+    Route::get('get-users', [\App\Http\Controllers\Api\UserController::class, 'getUsers']);
+
 
     // Note: This will auto-generate routes like below for all apiResource Type route
     // GET /api/users → list all users | POST /api/users → create user | GET /api/users/{id} → show user
@@ -42,9 +46,21 @@ Route::middleware(['jwt.verify'])->group(function () {
     Route::apiResource('suras', \App\Http\Controllers\Api\SuraController::class)->only(['index', 'show', 'update']);
     // Verse resource route
     Route::apiResource('verses', \App\Http\Controllers\Api\VerseController::class)->only(['index', 'show', 'update']);
+    // Surah Summary route
+    // Route::prefix('suras/{id}')->group(function () {
+    //     Route::get('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'index']);
+    //     Route::get('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'show']);
+    //     Route::post('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'storeOrUpdate']);
+    // });
+    Route::prefix('suras/{id}')->group(function () {
+        Route::get('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'index']); // GET all summaries
+        Route::post('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'store']); // GET all summaries
+        Route::get('sura-summary/{summaryId}', [\App\Http\Controllers\Api\SuraSummaryController::class, 'show']); // GET single summary
+        Route::put('sura-summary/{summaryId}', [\App\Http\Controllers\Api\SuraSummaryController::class, 'update']); // update
+        Route::delete('sura-summary/{summaryId}', [\App\Http\Controllers\Api\SuraSummaryController::class, 'destroy']); // delete
+    });
 
-    Route::get('my-profile', [\App\Http\Controllers\Api\UserController::class, 'profile']);
-    Route::put('users/update-profile', [\App\Http\Controllers\Api\UserController::class, 'updateProfile']);
-    Route::get('get-users', [\App\Http\Controllers\Api\UserController::class, 'getUsers']);
+
+    
 
 });
