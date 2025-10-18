@@ -52,12 +52,32 @@ Route::middleware(['jwt.verify'])->group(function () {
     //     Route::get('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'show']);
     //     Route::post('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'storeOrUpdate']);
     // });
+
+    // Surah Summary route
     Route::prefix('suras/{id}')->group(function () {
         Route::get('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'index']); // GET all summaries
         Route::post('sura-summary', [\App\Http\Controllers\Api\SuraSummaryController::class, 'store']); // GET all summaries
         Route::get('sura-summary/{summaryId}', [\App\Http\Controllers\Api\SuraSummaryController::class, 'show']); // GET single summary
         Route::put('sura-summary/{summaryId}', [\App\Http\Controllers\Api\SuraSummaryController::class, 'update']); // update
         Route::delete('sura-summary/{summaryId}', [\App\Http\Controllers\Api\SuraSummaryController::class, 'destroy']); // delete
+    });
+
+    // Verse German Translation route
+    Route::prefix('verses/{id}')->group(function () {
+        Route::get('translations', [\App\Http\Controllers\Api\VerseTranslateController::class, 'index']);
+        Route::post('translations', [\App\Http\Controllers\Api\VerseTranslateController::class, 'store']);
+        Route::get('translations/{translateId}', [\App\Http\Controllers\Api\VerseTranslateController::class, 'show']);
+        Route::put('translations/{translateId}', [\App\Http\Controllers\Api\VerseTranslateController::class, 'update']);
+        Route::delete('translations/{translateId}', [\App\Http\Controllers\Api\VerseTranslateController::class, 'destroy']);
+    });
+
+    // Verse Foot Notes route
+    Route::prefix('verses/{id}')->group(function () {
+        Route::get('foot-notes', [\App\Http\Controllers\Api\VerseFootNoteController::class, 'index']);
+        Route::post('foot-notes', [\App\Http\Controllers\Api\VerseFootNoteController::class, 'store']);
+        Route::get('foot-notes/{footNoteId}', [\App\Http\Controllers\Api\VerseFootNoteController::class, 'show']);
+        Route::put('foot-notes/{footNoteId}', [\App\Http\Controllers\Api\VerseFootNoteController::class, 'update']);
+        Route::delete('foot-notes/{footNoteId}', [\App\Http\Controllers\Api\VerseFootNoteController::class, 'destroy']);
     });
 
 
