@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
-use App\Models\VerseTranslate;
+use App\Models\VerseFootNote;
 use Illuminate\Http\Request;
 
-class VerseTranslateController extends Controller
+
+class VerseFootNoteController extends Controller
 {
-    // Get: show all Verse in German Translate
+    // Get: show all Verse Foot Note
     public function index(Request $request, $id)
     {
         try {
@@ -19,7 +20,7 @@ class VerseTranslateController extends Controller
             });
 
             // Base query
-            $query = VerseTranslate::where('verse_id', $id);
+            $query = VerseFootNote::where('verse_id', $id);
 
             // Search filter
             if (!empty($request->search)) {
@@ -37,16 +38,16 @@ class VerseTranslateController extends Controller
             $query->orderBy($orderColumn, $orderDir);
 
             $limit = $request->limit ?? 10;
-            $verseTranslates = $query->paginate($limit);
+            $verseFootNotes = $query->paginate($limit);
 
             return response()->json([
                 'success'      => true,
-                'message'      => "Verse Translation retrieved successfully.",
-                'data'         => $verseTranslates->items(),
-                'current_page' => $verseTranslates->currentPage(),
-                'limit'        => $verseTranslates->perPage(),
-                'last_page'    => $verseTranslates->lastPage(),
-                'total'        => $verseTranslates->total()
+                'message'      => "Verse foot notes retrieved successfully.",
+                'data'         => $verseFootNotes->items(),
+                'current_page' => $verseFootNotes->currentPage(),
+                'limit'        => $verseFootNotes->perPage(),
+                'last_page'    => $verseFootNotes->lastPage(),
+                'total'        => $verseFootNotes->total()
             ], 200);
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -65,7 +66,7 @@ class VerseTranslateController extends Controller
     }
 
 
-    // POST: Create a new Verse in German Translate
+    // POST: Create a new Foot Note
     public function store(Request $request, $id)
     {
         try {
@@ -76,18 +77,18 @@ class VerseTranslateController extends Controller
                 'status'  => 'nullable',
             ]);
 
-            $verseTranslate = new VerseTranslate();
-            $verseTranslate->verse_id = $id;
-            $verseTranslate->title    = $validated['title'] ?? null;
-            $verseTranslate->content  = $validated['content'] ?? null;
-            $verseTranslate->order    = $validated['order'] ?? null;
-            $verseTranslate->status   = $validated['status'] ?? 0;
-            $verseTranslate->save();
+            $verseFootNote = new VerseFootNote();
+            $verseFootNote->verse_id = $id;
+            $verseFootNote->title    = $validated['title'] ?? null;
+            $verseFootNote->content  = $validated['content'] ?? null;
+            $verseFootNote->order    = $validated['order'] ?? null;
+            $verseFootNote->status   = $validated['status'] ?? 0;
+            $verseFootNote->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Verse in German Translate created successfully.',
-                'data'    => $verseTranslate
+                'message' => 'Verse Foot Note Created Successfully.',
+                'data'    => $verseFootNote
             ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -110,7 +111,7 @@ class VerseTranslateController extends Controller
     }
 
 
-    // PUT: update a Verse in German Translate
+    // PUT: update a Foot Note
     public function update(Request $request, $id, $translateId)
     {
         try {
@@ -121,25 +122,25 @@ class VerseTranslateController extends Controller
                 'status'  => 'nullable',
             ]);
 
-            $verseTranslate = VerseTranslate::where('verse_id', $id)->where('id', $translateId)->first();
+            $verseFootNote = VerseFootNote::where('verse_id', $id)->where('id', $translateId)->first();
 
-            if (!$verseTranslate) {
+            if (!$verseFootNote) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Verse translate not found.'
+                    'message' => 'Verse Foot Note not found.'
                 ], 404);
             }
-            $verseTranslate->verse_id = $id;
-            $verseTranslate->title = $validated['title'] ?? null;
-            $verseTranslate->content = $validated['content'] ?? null;
-            $verseTranslate->order = $validated['order'] ?? null;
-            $verseTranslate->status = $validated['status'] ?? 0;
-            $verseTranslate->save();
+            $verseFootNote->verse_id = $id;
+            $verseFootNote->title = $validated['title'] ?? null;
+            $verseFootNote->content = $validated['content'] ?? null;
+            $verseFootNote->order = $validated['order'] ?? null;
+            $verseFootNote->status = $validated['status'] ?? 0;
+            $verseFootNote->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Verse translate updated successfully.',
-                'data'    => $verseTranslate
+                'message' => 'Verse Foot Note updated successfully.',
+                'data'    => $verseFootNote
             ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -157,23 +158,23 @@ class VerseTranslateController extends Controller
         }
     }
 
-    // GET: Show Verse Translated by Id
+    // GET: Show Verse Foot Note by Id
     public function show($id, $translateId)
     {
         try {
-            $verseTranslate = VerseTranslate::where('verse_id', $id)->where('id', $translateId)->first();
+            $verseFootNote = VerseFootNote::where('verse_id', $id)->where('id', $translateId)->first();
 
-            if (!$verseTranslate) {
+            if (!$verseFootNote) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Verse translation not found.'
+                    'message' => 'Verse Foot Note not found.'
                 ], 404);
             }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Verse translation fetch successfully.',
-                'data'    => $verseTranslate
+                'data'    => $verseFootNote
             ], 200);
 
         } catch (\Throwable $th) {
@@ -189,20 +190,20 @@ class VerseTranslateController extends Controller
     public function destroy($id, $translateId)
     {
         try {
-            $verseTranslate = VerseTranslate::where('verse_id', $id)->where('id', $translateId)->first();
+            $verseFootNote = VerseFootNote::where('verse_id', $id)->where('id', $translateId)->first();
 
-            if (!$verseTranslate) {
+            if (!$verseFootNote) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Verse translation not found.'
+                    'message' => 'Verse Foot Note not found.'
                 ], 404);
             }
 
-            $verseTranslate->delete();
+            $verseFootNote->delete();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Verse translation deleted successfully.'
+                'message' => 'Verse Foot Noot deleted successfully.'
             ], 200);
 
         } catch (\Throwable $th) {

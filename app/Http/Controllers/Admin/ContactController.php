@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
@@ -17,9 +17,26 @@ class ContactController extends Controller
             Paginator::currentPageResolver(function () use ($currentPage) {
                 return $currentPage;
             });
-            
-            $query = Contact::select("c.*")->from("contacts as c")->orderBy("c.created_at", "DESC");
-            $contacts = $query->paginate($request->limit ?? 10);
+            // $query = Contact::select("c.*")->from("contacts as c")->orderBy("c.created_at", "DESC");
+            // $contacts = $query->paginate($request->limit ?? 10);
+            $query = User::select('c.*')->from('contacts as c');
+
+            if (!empty($request->search)) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('c.id', 'like', '%' . $request->search . '%')
+                    ->orWhere('c.name', 'like', '%' . $request->search . '%')
+                    ->orWhere('c.email ', 'like', '%' . $request->search . '%')
+                    ->orWhere('c.phone', 'like', '%' . $request->search . '%')
+                    ->orWhere('c.message', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            $orderDir = $request->order_dir ?? 'desc';
+            $orderColumn = $request->order_by ?? 'c.id';
+            $query->orderBy($orderColumn, $orderDir);
+
+            $limit = $request->limit ?? 10;
+            $contacts = $query->paginate($limit);
 
             return response()->json([
                 'success'      => true,

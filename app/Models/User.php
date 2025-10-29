@@ -17,7 +17,7 @@ class User extends Authenticatable implements JWTSubject
      * @return mixed
      */
     protected $fillable = ['name', 'email', 'password'];
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'email_verified_at', ];
     
     public function getJWTIdentifier(): mixed
     {

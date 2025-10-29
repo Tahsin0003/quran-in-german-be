@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -30,13 +30,6 @@ class SuraController extends Controller
                     ->orWhere('s.total_ayas', 'like', '%' . $request->search . '%')
                     ->orWhere('s.revelation_type', 'like', '%' . $request->search . '%');
                 });
-            }
-
-            if (!empty($request->filter['revelation_place'])) {
-                $place = $request->filter['revelation_place'];
-                if ($place !== 'All') {
-                    $query->where('s.revelation_place', $place);
-                }
             }
 
             $orderDir = $request->order_dir ?? 'asc';

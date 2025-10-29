@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Auth\Events\Registered;
@@ -25,8 +25,25 @@ class UserController extends Controller
                 return $currentPage;
             });
 
-            $query = User::select("u.*")->from("users as u")->orderBy("u.created_at", "DESC");
-            $users = $query->paginate($request->limit ?? 10);
+            // $query = User::select("u.*")->from("users as u")->orderBy("u.created_at", "DESC");
+            // $users = $query->paginate($request->limit ?? 10);
+            $query = User::select('u.*')->from('users as u');
+
+            if (!empty($request->search)) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('u.id', 'like', '%' . $request->search . '%')
+                    ->orWhere('u.name', 'like', '%' . $request->search . '%')
+                    ->orWhere('u.email ', 'like', '%' . $request->search . '%')
+                    ->orWhere('u.phone', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            $orderDir = $request->order_dir ?? 'asc';
+            $orderColumn = $request->order_by ?? 'u.id';
+            $query->orderBy($orderColumn, $orderDir);
+
+            $limit = $request->limit ?? 10;
+            $users = $query->paginate($limit);
 
             return response()->json([
                 'success'      => true,
@@ -291,24 +308,6 @@ class UserController extends Controller
         }
     }
 
-    //Refresh a token - GET(JWT Auth Token)
-    public function refresh()
-    {
-        try {
-            // $newToken = auth()->refresh();
-            return response()->json([
-                'success' => true,
-                'message' => 'Token successfully refreshed',
-                'token' => auth()->refresh(),
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Token refresh failed',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
 
     // Logout API - GET(JWT AUth Token)
     public function logout(Request $request)
@@ -467,6 +466,45 @@ class UserController extends Controller
             ], 500);
         }
 
+    }
+
+    // Refresh a token - GET(JWT Auth Token)
+    public function refresh()
+    {
+        try {
+            $newToken = auth()->refresh();
+            return response()->json([
+                'success' => true,
+                'message' => 'Token refreshed successfully',
+                'token' => $newToken,
+                'token_type' => 'bearer',
+            ]);
+        } catch (JWTException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token refresh failed',
+                'error' => $e->getMessage()
+            ], 401);
+        }
+    }
+
+    // Get logged-in user details
+    public function getLoggedInUser(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            return response()->json([
+                'success' => true,
+                'message' => 'User fetched successfully',
+                'data' => $user
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get user',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
 }
